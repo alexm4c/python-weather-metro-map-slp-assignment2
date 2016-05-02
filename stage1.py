@@ -1,19 +1,38 @@
 #!/usr/bin/python
 
 import sys
+import os.path
 from stops import csv_extract_list, validate_stop_name
 from forecast import call_forecast_api
 
-STOPS_PATH = "stops.txt"
+# Path to the stops file
+STOPS_FILE_PATH = "stops.txt"
 
+# Validate usage
+if len(sys.argv) < 2:
+	print "Usage: " + sys.argv[0] + " <stop name> <time>"
+	exit()
+
+# Validate stops file exists
+if not os.path.exists(STOPS_FILE_PATH):
+	print "Error: Could not find stops file at path " + STOPS_FILE_PATH
+	exit()
+
+# Stop name is always the first arg
 stop_name = sys.argv[1]
+# Everything after is time
+time_string = " ".join(sys.argv[2:-1])
 
-stops_list = csv_extract_list(STOPS_PATH)
+# List of stops is in a file, so get the list from it
+stops_list = csv_extract_list(STOPS_FILE_PATH)
+# Validate the users input against the list of stops
 valid_stops = validate_stop_name(stop_name, stops_list)
 
+# Users input may have matched one, multiple or no stops
 if len(valid_stops) < 1:
 	print "No match for stop name: " + stop_name
 	exit()
+# If it matches multiple stops then get the user to pick one
 elif len(valid_stops) > 1:
 	print "Ambiguous stop name, which did you mean?"
 	for index, stop in enumerate(valid_stops):
@@ -24,15 +43,17 @@ elif len(valid_stops) > 1:
 	if response >= 0 and response < len(valid_stops):
 		valid_stop = valid_stops[response]
 	else:
-		print "You are beautiful!"
+		print "You are beautiful but your input was wrong."
 		exit()
+# Just one match so select it
 else:
 	valid_stop = valid_stops[0]
 
 
+
+
 # Call the forecast api
 forecast = call_forecast_api(valid_stop["stop_lat"], valid_stop["stop_lon"])
-
 
 ## We need to prettify the forecast data into human readable output
 
