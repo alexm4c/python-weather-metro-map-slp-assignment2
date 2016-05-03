@@ -2,7 +2,7 @@
 
 import sys
 import os.path
-from stops import csv_extract_list, validate_stop_name
+from train_stops import csv_extract_list, validate_stop_name
 from forecast import call_forecast_api
 
 # Path to the stops file
@@ -10,7 +10,7 @@ STOPS_FILE_PATH = "stops.txt"
 
 # Validate usage
 if len(sys.argv) < 2:
-	print "Usage: " + sys.argv[0] + " <stop name> <time>"
+	print "Usage: " + sys.argv[0] + " < stop name > < date / time >"
 	exit()
 
 # Validate stops file exists
@@ -20,8 +20,8 @@ if not os.path.exists(STOPS_FILE_PATH):
 
 # Stop name is always the first arg
 stop_name = sys.argv[1]
-# Everything after is time
-time_string = " ".join(sys.argv[2:-1])
+# Everything after is datetime
+date_string = " ".join(sys.argv[2:])
 
 # List of stops is in a file, so get the list from it
 stops_list = csv_extract_list(STOPS_FILE_PATH)
@@ -35,6 +35,7 @@ if len(valid_stops) < 1:
 # If it matches multiple stops then get the user to pick one
 elif len(valid_stops) > 1:
 	print "Ambiguous stop name, which did you mean?"
+
 	for index, stop in enumerate(valid_stops):
 		print "[" + str(index) + "] " + stop["stop_name"]
 
@@ -51,7 +52,6 @@ else:
 
 
 
-
 # Call the forecast api
 forecast = call_forecast_api(valid_stop["stop_lat"], valid_stop["stop_lon"])
 
@@ -63,9 +63,6 @@ rain_chance = forecast["currently"]["precipProbability"]
 rain_intensity = forecast["currently"]["precipIntensity"]
 wind_speed = forecast["currently"]["windSpeed"]
 wind_direction = forecast["currently"]["windBearing"]
-
-## Now build strings for printing
-## Rain amount and wind direction are a bit tricky so let's do them first
 
 # Convert rain amount in mm/hr into a classification of:
 # None, Light, Moderate, Heavy
@@ -87,30 +84,29 @@ else: #rain intensity is >2.5
 
 if wind_direction == None:
 	#API Docs says if wind dir is 0, it isn't even returned in the api call
-	wind_direction_str = "N"
+	wind_direction_str = "Northerly"
 elif wind_direction > 337.5 or wind_direction <= 22.5:
-	wind_direction_str = "N"
+	wind_direction_str = "Northerly"
 elif wind_direction <= 67.5:
-	wind_direction_str = "NE"
+	wind_direction_str = "North Easterly"
 elif wind_direction <= 112.5:
-	wind_direction_str = "E"
+	wind_direction_str = "Easterly"
 elif wind_direction <= 157.5:
-	wind_direction_str = "SE"
+	wind_direction_str = "South Easterly"
 elif wind_direction <= 202.5:
-	wind_direction_str = "S"
+	wind_direction_str = "Southerly"
 elif wind_direction <= 247.5:
-	wind_direction_str = "SW"
+	wind_direction_str = "South Westerly"
 elif wind_direction <= 292.5:
-	wind_direction_str = "W"
+	wind_direction_str = "Westerly"
 elif wind_direction <= 337.5:
-	wind_direction_str = "NW"
+	wind_direction_str = "North Westerly"
 else:
 	# Something bad happened
 	wind_direction_str = "Error"
 
 # Convert rain chance from decimal to percentage value
 rain_chance = int(rain_chance * 100)
-
 
 ## Finally print everything out
 
