@@ -4,6 +4,7 @@ import sys
 import os.path
 from train_stops import csv_extract_list, validate_stop_name
 from forecast import call_forecast_api
+from pretty_weather import prettify_forcast
 
 # Path to the stops file
 STOPS_FILE_PATH = "stops.txt"
@@ -55,66 +56,7 @@ else:
 # Call the forecast api
 forecast = call_forecast_api(valid_stop["stop_lat"], valid_stop["stop_lon"])
 
-## We need to prettify the forecast data into human readable output
+pretty_weather = prettify_forcast(forecast)
 
-# Assign variable names for readability
-temperature = forecast["currently"]["temperature"]
-rain_chance = forecast["currently"]["precipProbability"]
-rain_intensity = forecast["currently"]["precipIntensity"]
-wind_speed = forecast["currently"]["windSpeed"]
-wind_direction = forecast["currently"]["windBearing"]
-
-# Convert rain amount in mm/hr into a classification of:
-# None, Light, Moderate, Heavy
-if rain_intensity < 0.05:
-	rain_intensity_str = "None"
-elif rain_intensity < 0.5:
-	rain_intensity_str = "Light"
-elif rain_intensity < 2.5:
-	rain_intensity_str = "Moderate"
-else: #rain intensity is >2.5
-	rain_intensity_str = "Heavy"
-
-# Convert wind direction in degrees to compass directions
-# N, NE, E, SE, S, SW, W, NW
-# 0, 45, 90, 135, 180, 225, 270, 315
-# The final string is determined by 45 degrees wedges, or,
-# 22.5 degrees either side of each exact direction
-# I hope that made sense, else look at a compass
-
-if wind_direction == None:
-	#API Docs says if wind dir is 0, it isn't even returned in the api call
-	wind_direction_str = "Northerly"
-elif wind_direction > 337.5 or wind_direction <= 22.5:
-	wind_direction_str = "Northerly"
-elif wind_direction <= 67.5:
-	wind_direction_str = "North Easterly"
-elif wind_direction <= 112.5:
-	wind_direction_str = "Easterly"
-elif wind_direction <= 157.5:
-	wind_direction_str = "South Easterly"
-elif wind_direction <= 202.5:
-	wind_direction_str = "Southerly"
-elif wind_direction <= 247.5:
-	wind_direction_str = "South Westerly"
-elif wind_direction <= 292.5:
-	wind_direction_str = "Westerly"
-elif wind_direction <= 337.5:
-	wind_direction_str = "North Westerly"
-else:
-	# Something bad happened
-	wind_direction_str = "Error"
-
-# Convert rain chance from decimal to percentage value
-rain_chance = int(rain_chance * 100)
-
-## Finally print everything out
-
-# Print temperature
-print "Temp - celsius: %0.2f" % (temperature)
-
-# Print rain
-print "Rain - chance: %d%%, intensity: %s" % (rain_chance, rain_intensity_str) 
-
-# Print wind
-print "Wind - speed: %0.2fm/s, direction: %s" % (wind_speed, wind_direction_str)
+for key, value in pretty_weather:
+	print key + " - " + value
