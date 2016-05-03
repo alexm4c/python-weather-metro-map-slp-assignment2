@@ -58,5 +58,5 @@ forecast = call_forecast_api(valid_stop["stop_lat"], valid_stop["stop_lon"])
 
 pretty_weather = prettify_forcast(forecast)
 
-for key, value in pretty_weather:
+for key, value in pretty_weather.iteritems():
 	print key + " - " + value
