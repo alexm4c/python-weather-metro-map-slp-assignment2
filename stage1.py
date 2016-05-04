@@ -2,6 +2,7 @@
 
 import sys
 import os.path
+from select_date import string_select_datetime
 from train_stops import csv_extract_list, validate_stop_name
 from forecast import call_forecast_api
 from pretty_weather import prettify_forcast
@@ -22,12 +23,14 @@ if not os.path.exists(STOPS_FILE_PATH):
 # Stop name is always the first arg
 stop_name = sys.argv[1]
 # Everything after is datetime
-date_string = " ".join(sys.argv[2:])
+dt_select_string = " ".join(sys.argv[2:])
 
 # List of stops is in a file, so get the list from it
 stops_list = csv_extract_list(STOPS_FILE_PATH)
 # Validate the users input against the list of stops
 valid_stops = validate_stop_name(stop_name, stops_list)
+
+date_time = str(string_select_datetime(dt_select_string))
 
 # Users input may have matched one, multiple or no stops
 if len(valid_stops) < 1:
@@ -51,12 +54,12 @@ elif len(valid_stops) > 1:
 else:
 	valid_stop = valid_stops[0]
 
-
-
 # Call the forecast api
-forecast = call_forecast_api(valid_stop["stop_lat"], valid_stop["stop_lon"])
+forecast = call_forecast_api(valid_stop["stop_lat"], valid_stop["stop_lon"], date_time)
 
 pretty_weather = prettify_forcast(forecast)
 
+print "location: " + valid_stop['stop_name']
+print "time: " + date_time
 for key, value in pretty_weather.iteritems():
 	print key + " - " + value

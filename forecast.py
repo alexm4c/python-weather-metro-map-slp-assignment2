@@ -7,7 +7,7 @@ API_URL = "https://api.forecast.io/forecast/"
 API_KEY = "3263712d1c1452735faa19a7f9b90edc"
 OPTIONS = "?units=si&exclude=minutely,hourly,daily,alerts,flags"
 
-def call_forecast_api(latitude, longitude):
+def call_forecast_api(latitude, longitude, date_time):
 	
 	# build up api call url
 	url =  API_URL 
@@ -15,7 +15,9 @@ def call_forecast_api(latitude, longitude):
 	url += "/"
 	url += latitude 
 	url += "," 
-	url += longitude 
+	url += longitude
+	url += ","
+	url += date_time
 	url += OPTIONS
 
 	# make the api call and store returned json data
