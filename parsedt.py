@@ -34,7 +34,7 @@ def get_weekday_value(string):
 	else:
 		return None
 
-def string_select_datetime(datetime_string):
+def parse_dt_str(datetime_string):
 
 	today = datetime.today()
 
@@ -75,7 +75,7 @@ def string_select_datetime(datetime_string):
 	selected_date = today + timedelta(days=day_modifier)
 
 	## Then parse time selected
-	## 
+	## if no time is found, time is assumed to be the current time
 
 	mo = re.search(time_12hr_pattern, datetime_string, re.I)
 

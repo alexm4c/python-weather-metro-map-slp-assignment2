@@ -2,10 +2,9 @@
 
 import sys
 import os.path
-from select_date_time import string_select_datetime
-from train_stops import csv_extract_list, validate_stop_name
-from forecast import call_forecast_api
-from pretty_weather import prettify_forcast
+from parsedt import parse_dt_str
+from stops import csv_extract_list, validate_stop_name
+from forecast import call_forecast_api, prettify_forcast
 
 # Path to the stops file
 STOPS_FILE_PATH = "stops.txt"
@@ -30,7 +29,7 @@ stops_list = csv_extract_list(STOPS_FILE_PATH)
 # Validate the users input against the list of stops
 valid_stops = validate_stop_name(stop_name, stops_list)
 
-date_time = str(string_select_datetime(dt_select_string))
+date_time = parse_dt_str(dt_select_string)
 
 # Users input may have matched one, multiple or no stops
 if len(valid_stops) < 1:
