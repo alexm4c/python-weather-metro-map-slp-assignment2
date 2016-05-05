@@ -19,18 +19,10 @@ if not os.path.exists(STOPS_FILE_PATH):
 	print "Error: Could not find stops file at path " + STOPS_FILE_PATH
 	exit()
 
-# Stop name is always the first arg
+# First do stops things
 stop_name = sys.argv[1]
-# Everything after is datetime
-dt_select_string = " ".join(sys.argv[2:])
-
-# List of stops is in a file, so get the list from it
 stops_list = csv_extract_list(STOPS_FILE_PATH)
-# Validate the users input against the list of stops
 valid_stops = validate_stop_name(stop_name, stops_list)
-
-date_time = parse_dt_str(dt_select_string)
-
 # Users input may have matched one, multiple or no stops
 if len(valid_stops) < 1:
 	print "No match for stop name: " + stop_name
@@ -53,7 +45,11 @@ elif len(valid_stops) > 1:
 else:
 	valid_stop = valid_stops[0]
 
-# Call the forecast api
+# Then do datetime things
+dt_select_string = " ".join(sys.argv[2:])
+date_time = parse_dt_str(dt_select_string)
+
+# Now call the forecast api
 forecast = call_forecast_api(valid_stop["stop_lat"], valid_stop["stop_lon"], date_time)
 
 pretty_weather = prettify_forcast(forecast)
