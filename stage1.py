@@ -7,7 +7,7 @@ from stops import csv_extract_list, validate_stop_name
 from forecast import call_forecast_api, prettify_forcast
 
 # Path to the stops file
-STOPS_FILE_PATH = "stops.txt"
+STOPS_FILE_PATH = "./google_transit/stops.txt"
 
 # Validate usage
 if len(sys.argv) < 2:
@@ -60,5 +60,6 @@ pretty_weather = prettify_forcast(forecast)
 
 print "location: " + valid_stop['stop_name']
 print "time: " + date_time
+
 for key, value in pretty_weather.iteritems():
 	print key + " - " + value
