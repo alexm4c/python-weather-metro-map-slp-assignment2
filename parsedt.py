@@ -34,6 +34,8 @@ def get_weekday_value(string):
 	else:
 		return None
 
+### end of get_weekday_value ###
+
 def parse_dt_str(datetime_string):
 
 	today = datetime.today()
@@ -108,3 +110,5 @@ def parse_dt_str(datetime_string):
 
 
 	return datetime.combine(selected_date, selected_time).isoformat()
+
+### end of parse_dt_str ###

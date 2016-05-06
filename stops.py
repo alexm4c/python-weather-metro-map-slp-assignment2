@@ -28,17 +28,12 @@ def csv_extract_list(filename):
 
 def validate_stop_name(name, stop_list):
 
-	matched_stops_list = list()
-
 	pattern = re.escape(name)
 
 	for stop in stop_list:
-		mo = re.search(pattern, stop["stop_name"], re.I)
+		mo = re.match(pattern, stop["stop_name"], re.I)
 
 		if mo:
-			matched_stops_list.append(stop)
-
-
-	return matched_stops_list
+			return stop
 
 ### end of validate_stop_name() ###
