@@ -4,6 +4,24 @@ import io
 import csv
 import re
 
+STOPS_FILE_PATH = "./google_transit/stops.txt"
+
+class metro_data():
+
+	def __init__(self):
+		self.stop_list = csv_extract_list(STOPS_FILE_PATH)
+
+	def find_stop(self, name):
+		pattern = re.escape(name)
+
+		for stop in self.stop_list:
+			mo = re.match(pattern, stop["stop_name"], re.I)
+
+			if mo:
+				return stop
+
+## end of class metro_data ###
+
 def csv_extract_list(filename):
 	'Extracts data from a csv and return as list of dictionaries\n\
 	In this assignment it is used to get the train stops data from file'
@@ -25,15 +43,3 @@ def csv_extract_list(filename):
 	return csv_list
 
 ### end of extract_csv_list() ###
-
-def validate_stop_name(name, stop_list):
-
-	pattern = re.escape(name)
-
-	for stop in stop_list:
-		mo = re.match(pattern, stop["stop_name"], re.I)
-
-		if mo:
-			return stop
-
-### end of validate_stop_name() ###
