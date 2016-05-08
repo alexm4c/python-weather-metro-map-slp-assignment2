@@ -1,9 +1,9 @@
 #!/usr/bin/python
-from collections import OrderedDict
-from metro import metro_data
-from parsedt import parse_dt_str
-from forecast import call_forecast_api, prettify_forcast
-import web_tools
+from collections 	import OrderedDict
+from metro 			import metro_data
+from parsedt 		import parse_dt_str
+from forecast 		import call_forecast_api, prettify_forcast
+from web_tools 		import pageify, tableify
 
 # this is suitable for a GET - it has no parameters
 def initialPage():
@@ -18,13 +18,17 @@ def initialPage():
 
 def respondToSubmit(formData):
 	
+	response = dict()
+	response["title"] = "Prognostication"
+	response["body"] = list()
+	
 	# must validate the form names
 	# they could be anything!
 	if formData["stop_name"]:
 		stop_name = formData["stop_name"]
 	else:
-		response = "No stop name given!"
-		return response
+		response["body"].append("No stop name given!")
+		return pageify(response)
 
 	if formData["datetime"]:
 		dt_string = formData["datetime"]
@@ -33,22 +37,19 @@ def respondToSubmit(formData):
 
 	stop_data = metro_data().find_stop(stop_name)
 	if not stop_data:
-		response = "Could not find stop by name " + stop_name
-		return response
+		response["body"].append("Could not find stop by name " + stop_name)
+		return pageify(response)
 
 	iso_date_time = parse_dt_str(dt_string)
 
 	forecast = call_forecast_api(stop_data["stop_lat"], stop_data["stop_lon"], iso_date_time)
-	pretty_weather = prettify_forcast(forecast)
 
-	response = dict()
-	response["title"] = "Prognostication"
+	weather_table = OrderedDict()
+	weather_table["location"] = stop_data['stop_name']
+	weather_table["time"] = iso_date_time
+	weather_table.update(prettify_forcast(forecast))
+	weather_table = tableify(weather_table)
 
-	response["body"] = OrderedDict()
-	response["body"]["location"] = stop_data['stop_name']
-	response["body"]["time"] = iso_date_time
+	response["body"].append(weather_table)
 
-	for key, value in pretty_weather.iteritems():
-		response["body"][key] = value
-
-	return web_tools.htmlify(response)
+	return pageify(response)
