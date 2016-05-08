@@ -8,10 +8,30 @@ from web_tools 		import pageify, tableify
 # this is suitable for a GET - it has no parameters
 def initialPage():
 
-	with open("index.html") as index_fo:
-		response = index_fo.read()
+	response = dict()
+	response["title"] = "Prognosticator"
+	response["body"] = list()
 
-	return response
+	# prepare the station list element
+	station_select = "<select name=\"stop_name\">\n"
+	for stop in metro_data().stop_list:
+		station_select += "<option>"
+		station_select += stop["stop_name"]
+		station_select += "</option>\n"
+	station_select += "</select>\n"
+
+
+	form = "<form action=\"http://127.0.0.1:34567/\" method=\"POST\">"
+	form += "Station Name: "
+	form += station_select
+	form += "Time: "
+	form += "<input type=\"text\" name=\"datetime\"/>"
+	form += "<input type=\"submit\" value=\"Go!\">"
+	form += "</form>"
+
+	response["body"].append(form)
+
+	return pageify(response)
 
 # this is suitable for a POST - it has a single parameter which is 
 # a dictionary of values from the web page form.
@@ -22,8 +42,6 @@ def respondToSubmit(formData):
 	response["title"] = "Prognostication"
 	response["body"] = list()
 	
-	# must validate the form names
-	# they could be anything!
 	if formData["stop_name"]:
 		stop_name = formData["stop_name"]
 	else:

@@ -17,7 +17,7 @@ def pageify(content):
 			for elem in content["body"]:
 				data += elem
 
-		data += "</body>\n"
+		data += "\n</body>\n"
 
 	data += "</html>"
 
