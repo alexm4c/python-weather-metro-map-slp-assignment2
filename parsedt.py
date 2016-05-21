@@ -60,6 +60,7 @@ def parse_dt_str(datetime_string):
 		day_modifier = mo.group(1)
 		day_selector = mo.group(2).lower()
 	else:
+		day_modifier = None
 		day_selector = None
 
 	if day_modifier:

@@ -50,7 +50,7 @@ def respondToSubmit(formData):
 	if formData["datetime"]:
 		dt_string = formData["datetime"]
 	else:
-		dt_string = 0
+		dt_string = ""
 
 	# Validate, call API. Same as stage 1
 	stop_data = metro_data().find_stop(stop_name)
