@@ -22,23 +22,26 @@ class metro_data():
 
 ## end of class metro_data ###
 
+
+# Extracts data from a csv and return as list of dictionaries
+# In this assignment it is used to get the train stops data from file
+
 def csv_extract_list(filename):
-	'Extracts data from a csv and return as list of dictionaries\n\
-	In this assignment it is used to get the train stops data from file'
+
 	csv_list = list()
 
-	# open csv file, strip encoding characters
-	with io.open(filename, "r", encoding="utf-8-sig") as fo:
+	try:
+		# open csv file, strip encoding characters
+		with io.open(filename, "r", encoding="utf-8-sig") as fo:
 
-		# DictReader reads each csv line as a dictionary
-		# with the header values as keys
-		reader = csv.DictReader(fo)
+			reader = csv.DictReader(fo)
 
-		# append each dict to our stop list
-		for row in reader:
-			csv_list.append(row)
+			for row in reader:
+				csv_list.append(row)
 
-	# file is closed when 'with' ends
+	except IOError:
+		print "Fatal Error: " + filename + " not found!"
+		exit()
 
 	return csv_list
 

@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
+# Takes a dictionary as input with keys title and body.
+# Title is the title of the web page and
+# body is a list of string elements to append to the page
 def pageify(content):
-	# Takes a dictionary as input with keys title and body.
-	# Title is the title of the web page and
-	# body is a list of string elements to append to the page
 
 	data = "<!DOCTYPE html>\n<html>\n"
 
@@ -23,10 +23,12 @@ def pageify(content):
 
 	return data
 
+### end of pageify ###
 
+
+# Takes a dictionary as input and returns a 
+# html table representation of it as string.
 def tableify(content):
-	# Takes a dictionary as input and returns a 
-	# html table representation of it as string.
 
 	data = ""
 
@@ -38,7 +40,25 @@ def tableify(content):
 			data += "</tr>\n"
 		data += "</table>\n"
 
+	return data
+
+### end of tableify ###
+
+
+# Turns a list of elements into a HTML <select>
+# element with name = name
+def selectify(content, name):
+
+	data = ""
+
+	if isinstance(content, list):
+		data = "<select name=\"" + name + "\">\n"
+		for elem in content:
+			data += "<option>"
+			data += elem
+			data += "</option>\n"
+		data += "</select>\n"
 
 	return data
 
-
+### end of selectify ###

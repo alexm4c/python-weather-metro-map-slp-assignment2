@@ -10,6 +10,10 @@ date_pattern = r'(?:(\d+) day(?:s)? from )?' + day_specifier_pattern
 time_12hr_pattern = r'\b([0-9]|0[0-9]|1[0-2]):([0-5][0-9])\s*(am|pm)\b'
 time_24hr_pattern = r'\b([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])\b'
 
+### get_weekday_value ###
+# returns a number representation associated
+# with a day of the week. These values correspond
+# to the values assigned by the datetime library
 
 def get_weekday_value(string):
 	string = string.lower()
@@ -35,6 +39,13 @@ def get_weekday_value(string):
 		return None
 
 ### end of get_weekday_value ###
+
+
+### parse_dt_str ###
+# This function takes a single string in
+# the format specified in the assigment specs
+# and returns a ISO format date time, ready
+# to pass to the weather API.
 
 def parse_dt_str(datetime_string):
 
@@ -65,7 +76,7 @@ def parse_dt_str(datetime_string):
 		day_modifier += 1
 	elif day_selector == 'next week':
 		day_modifier += 7
-	else: #day selector is weekday
+	else: #day selector MUST be weekday
 		# difference between selected and current
 		wd_modifier = get_weekday_value(day_selector) - today.weekday()
 
@@ -107,7 +118,6 @@ def parse_dt_str(datetime_string):
 			minutes = today.minute
 
 	selected_time = time(hours, minutes, 0)
-
 
 	return datetime.combine(selected_date, selected_time).isoformat()
 
