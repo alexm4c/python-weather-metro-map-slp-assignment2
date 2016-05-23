@@ -7,6 +7,15 @@ import re
 STOPS_FILE_PATH = "./google_transit/stops.txt"
 
 class metro_data():
+	"""
+
+	This class hold the metro train stops data 
+	that is pulled from file.
+
+	It includes two helper functions used for
+	displaying the data.
+
+	"""
 
 	def __init__(self):
 		self.stop_list = csv_extract_list(STOPS_FILE_PATH)
@@ -40,12 +49,14 @@ class metro_data():
 
 ## end of class metro_data ###
 
-
-# Extracts data from a csv and return as list of dictionaries
-# In this assignment it is used to get the train stops data from file
-
 def csv_extract_list(filename):
+	"""
 
+	Extracts data from a csv and return as list of dictionaries
+	In this assignment it is used to get the train stops data from file
+
+
+	"""
 	csv_list = list()
 
 	try:

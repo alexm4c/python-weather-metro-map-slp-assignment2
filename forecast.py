@@ -7,13 +7,14 @@ API_URL = "https://api.forecast.io/forecast/"
 API_KEY = "3263712d1c1452735faa19a7f9b90edc"
 OPTIONS = "?units=si&exclude=minutely,hourly,daily,alerts,flags"
 
-### call_forecast_api ###
-# Calls the forcast api given above, 
-# then converts the returned JSON into
-# a usable dictionary.
-
 def call_forecast_api(latitude, longitude, date_time):
-	
+	"""
+
+	Calls the forcast api given above, 
+	then converts the returned JSON into
+	a usable dictionary.
+
+	"""	
 	# build up api call url
 	url =  API_URL 
 	url += API_KEY 
@@ -34,19 +35,19 @@ def call_forecast_api(latitude, longitude, date_time):
 
 ### end of get_forecast ###
 
-
-### prettify_forecast ###
-# Helper function that converts a
-# dictionary of assumed structure
-# into more human friendly output
-# strings as dictionary eg.
-# "wind":"2m/s N"
-# Makes changes such as turning rain intensity
-# in mm/hr into classes,
-# and wind bearing into compass direction
-
 def prettify_forcast(forecast):
+	"""
 
+	Helper function that converts a
+	dictionary of assumed structure
+	into more human friendly output
+	strings as dictionary eg.
+	"wind":"2m/s N"
+	Makes changes such as turning rain intensity
+	in mm/hr into classes,
+	and wind bearing into compass direction
+
+	"""
 	# Assign variable names for readability
 	temperature 	= forecast["currently"]["temperature"]
 	rain_chance 	= forecast["currently"]["precipProbability"]

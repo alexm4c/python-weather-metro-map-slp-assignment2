@@ -33,17 +33,20 @@ def initialPage():
 	response["body"].append(form)
 	response["body"].append("<br>\n")
 
+	# prepare map
 	mapImg = MapImage("melbourne.png", "./assets/melbMap.png", 144.223899, -38.631177, 145.985832, -37.235068)
 
 	nameList = metroData.getTidyNameList()
 	coordList = list()
 
+	# get the coords from that data and convert to pixels
 	for stop in metroData.stop_list:
 		(x, y) = mapImg.coordsToPixels(float(stop["stop_lat"]), float(stop["stop_lon"]))
 		coordList.append((x,y))
 	
 	mapImg.drawStations(coordList, nameList)
 	
+	# append the map to body
 	img = "<img src=\"melbMap.png\">\n"
 	response["body"].append(img)
 

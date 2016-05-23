@@ -3,13 +3,17 @@
 from PIL 		import Image, ImageDraw, ImageColor, ImageFont
 from itertools 	import izip
 
-# class GeoCoord():
-# 	def __init__(self, lat, long):
-# 		self.latitude = lat
-# 		self.longitude = long
-
-
 class MapImage():
+	"""
+
+	MapImage class holds data asscociated with overlaying images over it.
+
+	imgPath: path to the original map image
+	saveTo: where to save the resulting overlaid image
+	bounds: the GPS boundaries of the map for calculating interpolation to pixels
+
+	"""
+
 	def __init__(self, imgPath, saveTo, eastBound, southBound, westBound, northBound):
 		
 		self.img = Image.open(imgPath)
@@ -23,8 +27,15 @@ class MapImage():
 		self.eastBound = eastBound
 		self.northBound = northBound
 
+	### end of __init__ ###
+
 	def coordsToPixels(self, latitude, longitude):
-		
+		"""
+
+		Input: GPS coordinates, latitude and longitude.
+		Output: Pixels asscociated with those coordinates
+
+		"""
 		geoLength = float(self.eastBound - self.westBound)
 		geoHeight = float(self.northBound - self.southBound)
 
@@ -36,8 +47,16 @@ class MapImage():
 
 		return (xPixel, yPixel)
 
+	### end of coordsToPixels ###
 
 	def drawStations(self, coordList, nameList):
+		"""
+		
+		From a list of coordinates and names,
+		overlay those onto the map image.
+
+		"""
+
 		draw = ImageDraw.Draw(self.img) 
 
 		for index, (coord, name) in enumerate(izip(coordList, nameList)):
@@ -50,3 +69,7 @@ class MapImage():
 			draw.text([x+8, y-3], name, fill=255)
 
 		self.img.save(self.saveTo, "PNG")
+
+	### end of drawStations ###
+
+### end of class MapImage ###
