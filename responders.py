@@ -4,9 +4,12 @@ from metro 			import metro_data
 from parsedt 		import parse_dt_str
 from forecast 		import call_forecast_api, prettify_forcast
 from web_tools 		import pageify, tableify, selectify
+from maps			import MapImage
 
 # this is suitable for a GET - it has no parameters
 def initialPage():
+
+	metroData = metro_data()
 
 	response = dict()
 	response["title"] = "Prognosticator"
@@ -14,7 +17,7 @@ def initialPage():
 
 	# prepare the station list element
 	station_select = list()
-	for stop in metro_data().stop_list:
+	for stop in metroData.stop_list:
 		station_select.append(stop["stop_name"])
 	station_select.sort()
 	station_select = selectify(station_select, "stop_name")
@@ -28,6 +31,21 @@ def initialPage():
 	form += "</form>"
 
 	response["body"].append(form)
+	response["body"].append("<br>\n")
+
+	mapImg = MapImage("melbourne.png", "./assets/melbMap.png", 144.223899, -38.631177, 145.985832, -37.235068)
+
+	nameList = metroData.getTidyNameList()
+	coordList = list()
+
+	for stop in metroData.stop_list:
+		(x, y) = mapImg.coordsToPixels(float(stop["stop_lat"]), float(stop["stop_lon"]))
+		coordList.append((x,y))
+	
+	mapImg.drawStations(coordList, nameList)
+	
+	img = "<img src=\"melbMap.png\">\n"
+	response["body"].append(img)
 
 	return pageify(response)
 

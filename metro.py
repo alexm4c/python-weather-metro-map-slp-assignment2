@@ -20,6 +20,24 @@ class metro_data():
 			if mo:
 				return stop
 
+
+	def getTidyNameList(self):
+		pattern = r'^([\w\s\-\(\)]*) Railway.*'
+
+		nameList = list()
+
+		for stop in self.stop_list:
+			mo = re.match(pattern, stop["stop_name"], re.I)
+
+			if mo:
+				nameList.append(mo.group(1))
+			else:
+				nameList.append(stop["stop_name"])
+				print stop["stop_name"]
+
+		return nameList
+
+
 ## end of class metro_data ###
 
 
